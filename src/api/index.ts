@@ -9,6 +9,11 @@ export const fetchBlogs = async (page: number = 1): Promise<TBlog[]> => {
   return response.data;
 };
 
+export const fetchBlogById = async (id: string): Promise<TBlog> => {
+  const response = await axios.get<TBlog>(`${CONSTANT.API_URL}/blogs/${id}`);
+  return response.data;
+};
+
 export const postBlog = async (blog: TBlog): Promise<TBlog> => {
   const response = await axios.post<TBlog>(`${CONSTANT.API_URL}/blogs`, blog);
   return response.data;

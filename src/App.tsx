@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Navbar from './components/navbar';
@@ -21,6 +21,7 @@ const AppWrapper = styled.main`
   positon: relative;
 `;
 const App: FC = () => {
+  const [isLoggedin, setIsLoggedIn] = useState(false);
   return (
     <BrowserRouter>
       <AppWrapper>

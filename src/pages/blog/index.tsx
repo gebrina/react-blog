@@ -9,7 +9,7 @@ import { TBlog } from '../../types/blog';
 import Loader from '../../components/loader';
 
 const BlogWrapper = styled.div`
-  min-height: 60vh;
+  min-height: 84.5vh;
   padding-right: 75px;
   padding-left: 75px;
   display: flex;

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const FooterWrapper = styled.footer`
   background: rgba(0, 0, 0, 0.8);
-  min-height: 50px;
+  height: 5vh;
   display: flex;
   align-items: center;
   padding: 0 10%;

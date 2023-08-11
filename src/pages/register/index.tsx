@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useFormik } from 'formik';
+import { registerValidation } from '../../validation';
 
 const RegisterFormWrapper = styled.div`
   height: 83.6vh;
@@ -12,6 +14,7 @@ const RegisterFormWrapper = styled.div`
     height: 65vh;
   }
 `;
+
 const RegisterForm = styled.form`
   display: flex;
   height: 65%;
@@ -69,14 +72,51 @@ const RegisterFormTitle = styled.h1`
   text-align: center;
 `;
 
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 20px;
+  text-transform: capitalize;
+`;
 const Register = () => {
+  const initialValues = { username: '', email: '', password: '' };
+  const { values, errors, touched, handleChange } = useFormik({
+    initialValues,
+    validationSchema: registerValidation,
+    onSubmit: () => {},
+  });
+
   return (
     <RegisterFormWrapper>
       <RegisterForm>
         <RegisterFormTitle>Welcome, Register</RegisterFormTitle>
-        <InputField placeholder="Username" />
-        <InputField placeholder="Emial address" />
-        <InputField type="password" placeholder="Password" />
+        <InputField
+          name="username"
+          value={values.username}
+          onChange={handleChange}
+          placeholder="Username"
+        />
+        {touched.username && errors.username && (
+          <ErrorMessage>{errors.username}</ErrorMessage>
+        )}
+        <InputField
+          name="email"
+          value={values.email}
+          onChange={handleChange}
+          placeholder="Emial address"
+        />
+        {touched.email && errors.email && (
+          <ErrorMessage>{errors.email}</ErrorMessage>
+        )}
+        <InputField
+          name="password"
+          value={values.password}
+          type="password"
+          onChange={handleChange}
+          placeholder="Password"
+        />
+        {touched.password && errors.password && (
+          <ErrorMessage>{errors.password}</ErrorMessage>
+        )}
         <RegisterButton type="submit">Register</RegisterButton>
         <RegisterHint>
           Already have account? <Link to="/login">login</Link>

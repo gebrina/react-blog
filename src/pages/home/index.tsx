@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import React from 'react';
 import readingWoman from '../../assets/readingwoman.jpg';
 const HomeWrapper = styled.div`
-  min-height: 80vh;
+  min-height: 84.5vh;
   position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;

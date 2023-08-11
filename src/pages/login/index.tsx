@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const LoginFormWrapper = styled.div`
-  height: 83.6vh;
+  height: 84.6vh;
   width: 50%;
   margin: auto;
   position: relative;
