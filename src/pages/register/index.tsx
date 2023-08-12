@@ -1,11 +1,12 @@
 import styled from '@emotion/styled';
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { registerValidation } from '../../validation';
+import { useMutation } from '@tanstack/react-query';
+import { createUser } from '../../api/user';
 
 const RegisterFormWrapper = styled.div`
-  height: 83.6vh;
+  height: 84.5vh;
   width: 50%;
   margin: auto;
   position: relative;
@@ -17,7 +18,7 @@ const RegisterFormWrapper = styled.div`
 
 const RegisterForm = styled.form`
   display: flex;
-  height: 65%;
+  height: auto;
   position: absolute;
   top: 70px;
   left: 50%;
@@ -48,9 +49,9 @@ const RegisterButton = styled.button`
   }
 `;
 
-const RegisterHint = styled.p`
+const LoginHint = styled.p`
   a {
-    color: red;
+    color: rgba(255, 0, 0, 0.5);
   }
 `;
 
@@ -73,21 +74,32 @@ const RegisterFormTitle = styled.h1`
 `;
 
 const ErrorMessage = styled.p`
-  color: red;
-  font-size: 20px;
-  text-transform: capitalize;
+  color: rgba(255, 0, 0, 0.7);
+  font-size: 14px;
 `;
 const Register = () => {
-  const initialValues = { username: '', email: '', password: '' };
-  const { values, errors, touched, handleChange } = useFormik({
-    initialValues,
-    validationSchema: registerValidation,
-    onSubmit: () => {},
+  const mutation = useMutation({
+    mutationKey: ['register'],
+    mutationFn: createUser,
   });
+  const initialValues = { username: '', email: '', password: '' };
+  const { values, errors, resetForm, touched, handleChange, handleSubmit } =
+    useFormik({
+      initialValues,
+      validationSchema: registerValidation,
+      onSubmit: () => {
+        mutation.mutate({
+          username: values.username,
+          email: values.email,
+          password: values.password,
+        });
+        resetForm();
+      },
+    });
 
   return (
     <RegisterFormWrapper>
-      <RegisterForm>
+      <RegisterForm onSubmit={handleSubmit}>
         <RegisterFormTitle>Welcome, Register</RegisterFormTitle>
         <InputField
           name="username"
@@ -117,10 +129,12 @@ const Register = () => {
         {touched.password && errors.password && (
           <ErrorMessage>{errors.password}</ErrorMessage>
         )}
-        <RegisterButton type="submit">Register</RegisterButton>
-        <RegisterHint>
+        <RegisterButton type="submit">
+          {mutation.isLoading ? 'Registering...' : 'Register'}
+        </RegisterButton>
+        <LoginHint>
           Already have account? <Link to="/login">login</Link>
-        </RegisterHint>
+        </LoginHint>
       </RegisterForm>
     </RegisterFormWrapper>
   );

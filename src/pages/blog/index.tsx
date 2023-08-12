@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import jsxImage from '../../assets/jsx.jpg';
 import BlogCard from './card';
-import { fetchBlogs } from '../../api';
+import { fetchBlogs } from '../../api/blog';
 import { CONSTANT } from '../../constants';
 import { TBlog } from '../../types/blog';
 import Loader from '../../components/loader';

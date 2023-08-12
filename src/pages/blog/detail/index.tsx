@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import { fetchBlogById } from '../../../api';
+import { fetchBlogById } from '../../../api/blog';
 import Loader from '../../../components/loader';
 
 const BlogDetailWrapper = styled.div`

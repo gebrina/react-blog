@@ -1,6 +1,9 @@
 import styled from '@emotion/styled';
-import React from 'react';
 import { Link } from 'react-router-dom';
+import { useFormik } from 'formik';
+import { useMutation } from '@tanstack/react-query';
+import { authUser } from '../../api/auth';
+import { loginValidation } from '../../validation';
 
 const LoginFormWrapper = styled.div`
   height: 84.6vh;
@@ -12,9 +15,9 @@ const LoginFormWrapper = styled.div`
     height: 65vh;
   }
 `;
+
 const LoginForm = styled.form`
   display: flex;
-  height: 60%;
   position: absolute;
   top: 70px;
   left: 50%;
@@ -69,15 +72,59 @@ const LoginFormTitle = styled.h1`
   text-align: center;
 `;
 
+const ErrorMessage = styled.p`
+  color: rgba(255, 0, 0, 0.7);
+  font-size: 20px;
+  text-align: center;
+`;
+
 const LogIn = () => {
+  const mutation = useMutation({
+    mutationKey: ['login'],
+    mutationFn: authUser,
+    onSuccess: (token) => {
+      localStorage.setItem('token', JSON.stringify(token));
+    },
+    onError: (res) => {
+      console.log('apier', res);
+    },
+  });
+  const initialValues = { email: '', password: '' };
+  const { touched, errors, resetForm, values, handleChange, handleSubmit } =
+    useFormik({
+      initialValues,
+      validationSchema: loginValidation,
+      onSubmit: () => {
+        mutation.mutate({ email: values.email, password: values.password });
+        resetForm();
+      },
+    });
+
   return (
     <LoginFormWrapper>
-      <LoginForm>
+      <LoginForm onSubmit={handleSubmit}>
         <LoginFormTitle>
           Login to your account and CRUD your post
         </LoginFormTitle>
-        <InputField placeholder="Emial address" />
-        <InputField placeholder="Password" />
+        <InputField
+          name="email"
+          value={values.email}
+          onChange={handleChange}
+          placeholder="Emial address"
+        />
+        {touched.email && errors.email && (
+          <ErrorMessage>{errors.email}</ErrorMessage>
+        )}
+        <InputField
+          name="password"
+          type="password"
+          value={values.password}
+          onChange={handleChange}
+          placeholder="Password"
+        />
+        {touched.password && errors.password && (
+          <ErrorMessage>{errors.password}</ErrorMessage>
+        )}
         <LoginButton type="submit">Login</LoginButton>
         <RegisterHint>
           You don't have account? <Link to="/register">register</Link>
