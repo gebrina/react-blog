@@ -1,9 +1,13 @@
+import { useEffect } from 'react';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { useMutation } from '@tanstack/react-query';
 import { authUser } from '../../api/auth';
+import { useNavigate } from 'react-router-dom';
+
 import { loginValidation } from '../../validation';
+import { useBlogContext } from '../../context';
 
 const LoginFormWrapper = styled.div`
   height: 84.6vh;
@@ -25,7 +29,7 @@ const LoginForm = styled.form`
   flex-direction: column;
   box-shadow: 0.3px 0.3px 3px 1px rgba(255, 255, 255, 0.3);
   gap: 20px;
-  padding-top: 30px;
+  padding: 30px 0px;
   align-items: center;
 
   @media (max-width: 500px) {
@@ -79,11 +83,15 @@ const ErrorMessage = styled.p`
 `;
 
 const LogIn = () => {
+  const navigate = useNavigate();
+  const { isLoggedIn, handleLogin } = useBlogContext();
+
   const mutation = useMutation({
     mutationKey: ['login'],
     mutationFn: authUser,
-    onSuccess: (token) => {
-      localStorage.setItem('token', JSON.stringify(token));
+    onSuccess: (user) => {
+      handleLogin(user);
+      navigate('/dashboard');
     },
     onError: (res) => {
       console.log('apier', res);
@@ -100,6 +108,9 @@ const LogIn = () => {
       },
     });
 
+  useEffect(() => {
+    if (isLoggedIn) navigate('/dashboard');
+  });
   return (
     <LoginFormWrapper>
       <LoginForm onSubmit={handleSubmit}>

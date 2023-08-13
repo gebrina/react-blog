@@ -12,3 +12,10 @@ export const loginValidation = () =>
     email: yup.string().email().required(),
     password: yup.string().min(4).required(),
   });
+
+export const BlogPostValidation = () =>
+  yup.object().shape({
+    title: yup.string().required().min(5),
+    description: yup.string().required().min(50),
+    content: yup.string().required().min(100),
+  });

@@ -11,6 +11,9 @@ import styled from '@emotion/styled';
 import './App.css';
 import LogIn from './pages/login';
 import Register from './pages/register';
+import ProtectedRoute from './protected-route';
+import Dashboard from './pages/dashboard';
+import { useBlogContext } from './context';
 
 const AppWrapper = styled.main`
   min-height: 100dvh;
@@ -21,7 +24,7 @@ const AppWrapper = styled.main`
   positon: relative;
 `;
 const App: FC = () => {
-  const [isLoggedin, setIsLoggedIn] = useState(false);
+  const { isLoggedIn } = useBlogContext();
   return (
     <BrowserRouter>
       <AppWrapper>
@@ -32,6 +35,14 @@ const App: FC = () => {
           <Route path="/blog/:id" element={<BlogDetail />} />
           <Route path="/login" element={<LogIn />} />
           <Route path="/register" element={<Register />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute isLoggedin={isLoggedIn}>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />

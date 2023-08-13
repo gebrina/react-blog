@@ -60,7 +60,7 @@ const Blog: FC = () => {
     queryFn: ({ pageParam = 1 }) => fetchBlogs(pageParam),
     getNextPageParam: (lastPage, allPages) => {
       const nextPage =
-        lastPage.length === CONSTANT.LIMIT ? allPages.length : undefined;
+        lastPage.length === CONSTANT.LIMIT ? allPages.length + 1 : undefined;
       return nextPage;
     },
   });
@@ -82,7 +82,9 @@ const Blog: FC = () => {
           ))
         )}
       </BlogWrapper>
-      {!isFetching ? <LoadMoreButton>Load More</LoadMoreButton> : <Loader />}
+      <LoadMoreButton onClick={() => fetchNextPage()}>
+        {isFetching ? 'Loading...' : 'Load More'}
+      </LoadMoreButton>
     </>
   );
 };

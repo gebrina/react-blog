@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { NavLink } from 'react-router-dom';
 import logo from '../../assets/logo.png';
+import { useBlogContext } from '../../context';
 
 const NavbarWrapper = styled.header`
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -65,6 +66,7 @@ const LogoContainer = styled.div`
   }
 `;
 const Navbar = () => {
+  const { isLoggedIn, handleLogOut } = useBlogContext();
   return (
     <NavbarWrapper>
       <LogoContainer>
@@ -73,7 +75,14 @@ const Navbar = () => {
       <NavLinkWrapper>
         <NavLink to={'/'}>Home</NavLink>
         <NavLink to={'/blog'}>Blog</NavLink>
-        <NavLink to={'/login'}>Log In</NavLink>
+        <NavLink
+          onClick={() => {
+            if (isLoggedIn) handleLogOut();
+          }}
+          to={'/login'}
+        >
+          {isLoggedIn ? 'Log out' : 'Log in'}
+        </NavLink>
       </NavLinkWrapper>
     </NavbarWrapper>
   );

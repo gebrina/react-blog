@@ -1,4 +1,4 @@
 export enum CONSTANT {
-  LIMIT = 2,
+  LIMIT = 3,
   API_URL = 'http://localhost:3000',
 }
