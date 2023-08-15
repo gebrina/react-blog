@@ -9,8 +9,12 @@ import CreateBlog from './create-blog';
 
 const DashboardWrapper = styled.div`
   min-height: 84.5vh;
-  padding: 50px 150px;
   margin: auto;
+  padding: 50px 150px;
+
+  @media only screen and (max-width: 600px) {
+    padding: 50px;
+  }
 `;
 
 const DashboardTitle = styled.h2`
@@ -41,6 +45,10 @@ const MessageContainer = styled.div`
   display: flex;
   justify-content: space-between;
   padding-top: 50px;
+  @media only screen and (max-width: 600px) {
+    flex-direction: column;
+    gap: 20px;
+  }
 `;
 const BlogTable = styled.table``;
 const Dashboard = () => {

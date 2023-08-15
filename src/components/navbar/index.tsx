@@ -65,6 +65,20 @@ const LogoContainer = styled.div`
     border-radius: 20px;
   }
 `;
+
+const CreateBlogButton = styled.button`
+  border: none;
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:hover {
+    cursor: pointer;
+    color: rgba(255, 0, 0, 0.8);
+  }
+`;
 const Navbar = () => {
   const { isLoggedIn, handleLogOut } = useBlogContext();
   return (
@@ -75,6 +89,11 @@ const Navbar = () => {
       <NavLinkWrapper>
         <NavLink to={'/'}>Home</NavLink>
         <NavLink to={'/blog'}>Blog</NavLink>
+        {isLoggedIn && (
+          <NavLink to={'/dashboard'}>
+            <CreateBlogButton title="Create Blog">+</CreateBlogButton>
+          </NavLink>
+        )}
         <NavLink
           onClick={() => {
             if (isLoggedIn) handleLogOut();

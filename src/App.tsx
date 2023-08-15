@@ -1,5 +1,4 @@
 import React, { FC, useState } from 'react';
-
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Navbar from './components/navbar';
 import Home from './pages/home';
