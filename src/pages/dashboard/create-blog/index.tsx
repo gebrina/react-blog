@@ -1,11 +1,14 @@
-import React from 'react';
+import { useState } from 'react';
 import styled from '@emotion/styled';
 import { useFormik } from 'formik';
 import ReactQuill from 'react-quill';
 import Dropzone from 'react-dropzone';
 import 'react-quill/dist/quill.snow.css';
+import { useMutation } from '@tanstack/react-query';
 import { TUser } from '../../../types/user';
 import { BlogPostValidation } from '../../../validation';
+import { postBlog } from '../../../api/blog';
+import { useBlogContext } from '../../../context';
 
 type CreateBlogProps = {
   user: TUser;
@@ -22,7 +25,7 @@ const InputField = styled.input`
   font-size: 20px;
   border-left: 1px solid rgba(255, 0, 0, 0.7);
   border-bottom: 1px solid rgba(255, 0, 0, 0.7);
-  width: max-content;
+  width: 100%;
 `;
 const InputTextAreaField = styled.textarea`
   padding: 10px 25px;
@@ -83,20 +86,51 @@ const CreateBlogButton = styled.button`
     transition: all 0.5s ease;
   }
 `;
-
+const Image = styled.img`
+  height: 100%;
+  width: 100%;
+  objec-fit: contain;
+`;
 const CreateBlog = ({ user, setCreatePost }: CreateBlogProps) => {
+  const { loggedinUser } = useBlogContext();
   const initialValues = {
     title: '',
     description: '',
     content: '',
     media: '',
   };
+  const [image, setimage] = useState('');
+  const [blogContent, setBlogContent] = useState('');
   const { values, touched, errors, handleChange, handleSubmit, resetForm } =
     useFormik({
       initialValues,
       validationSchema: BlogPostValidation,
-      onSubmit: () => {},
+      onSubmit: () => {
+        createData();
+      },
     });
+
+  const mutation = useMutation({
+    mutationKey: ['create-blog'],
+    mutationFn: postBlog,
+    onSuccess: (response) => {
+      console.log(response);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const createData = () => {
+    const formData = new FormData();
+    formData.append('media', values.media);
+    formData.append('title', values.title);
+    formData.append('content', blogContent);
+    formData.append('description', values.description);
+    formData.append('user', loggedinUser.user.id);
+    mutation.mutate(formData);
+  };
+
   return (
     <CreateBlogWrapper>
       <CreateBlogForm onSubmit={handleSubmit}>
@@ -121,10 +155,18 @@ const CreateBlog = ({ user, setCreatePost }: CreateBlogProps) => {
         )}
 
         <DropZoneWrapper>
-          <Dropzone onDrop={(acceptedFiles: File[]) => {}}>
+          <Dropzone
+            onDrop={(acceptedFiles: File[]) => {
+              const file = acceptedFiles[0];
+              const uploadedImage = URL.createObjectURL(file);
+              setimage(uploadedImage);
+              values.media = file as any;
+            }}
+          >
             {({ getInputProps, getRootProps, isDragActive }) => (
               <section {...getRootProps()}>
                 <InputField {...getInputProps()} />
+                {image && <Image src={image} />}
                 <Message>
                   {isDragActive ? 'Drop Here...' : 'Drag and Drop File Here...'}
                 </Message>
@@ -135,11 +177,11 @@ const CreateBlog = ({ user, setCreatePost }: CreateBlogProps) => {
         <QuillWrapper>
           <ReactQuill
             placeholder="Content....."
-            value={values.content}
-            onChange={handleChange}
+            value={blogContent}
+            onChange={setBlogContent}
           />
         </QuillWrapper>
-        <CreateBlogButton>Create</CreateBlogButton>
+        <CreateBlogButton type="submit">Create</CreateBlogButton>
       </CreateBlogForm>
     </CreateBlogWrapper>
   );

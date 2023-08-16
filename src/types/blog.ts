@@ -1,10 +1,10 @@
 import { TUser } from './user';
 
 export type TBlog = {
-  id: string;
+  id?: string;
   title: string;
   content: string;
-  media: string;
+  media: any;
   description: string;
   user?: TUser;
 };

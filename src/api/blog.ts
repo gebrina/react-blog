@@ -14,8 +14,13 @@ export const fetchBlogById = async (id: string): Promise<TBlog> => {
   return response.data;
 };
 
-export const postBlog = async (blog: TBlog): Promise<TBlog> => {
-  const response = await axios.post<TBlog>(`${CONSTANT.API_URL}/blogs`, blog);
+export const postBlog = async (blog: FormData): Promise<TBlog> => {
+  const token = JSON.parse(localStorage.getItem('user') || '').access_token;
+  const response = await axios.post<TBlog>(`${CONSTANT.API_URL}/blogs`, blog, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 };
 
