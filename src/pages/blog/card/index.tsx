@@ -4,13 +4,11 @@ import { Link } from 'react-router-dom';
 import { TBlog } from '../../../types/blog';
 
 const Card = styled.div`
-  height: 300px;
-  margin-bottom: 50px;
   color: rgba(255, 255, 255, 0.8);
   text-align: center;
   max-width: 500px;
   img {
-    height: 80%;
+    height: 250px;
     width: 100%;
     object-fit: cover;
   }
@@ -20,12 +18,15 @@ const Card = styled.div`
   }
 `;
 const CardTitle = styled.h3`
-  margin-bottom: 10px;
+  padding-bottom: 40px;
+  min-height: 100px;
 `;
 
 const BlogDetailLink = styled.div`
   a {
     text-decoration: none;
+    display: block;
+    margin-top: 30px;
     color: rgba(255, 255, 255, 0.7);
     &:hover {
       color: rgba(255, 255, 255, 1);
@@ -48,7 +49,13 @@ const BlogCard: React.FC<TBlogCardProps> = ({ blog }) => {
       </BlogDetailLink>
       <img src={'http://' + media} alt="JSX" />
       <BlogDetailLink>
-        <Link to={`/blog/${id}`}>{description}</Link>
+        <p>
+          {description.substring(0, 140)} ...
+          <br />
+          <Link style={{ textDecoration: 'underline' }} to={`/blog/${id}`}>
+            Read-more
+          </Link>
+        </p>
       </BlogDetailLink>
     </Card>
   );

@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import React from 'react';
 import styled from '@emotion/styled';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useBlogContext } from '../../context';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Loader from '../../components/loader';
 import { fetchUserById } from '../../api/user';
 import CreateBlog from './create-blog';
 import { TBlog } from '../../types/blog';
+import { deleteBlog } from '../../api/blog';
 
 const DashboardWrapper = styled.div`
   min-height: 84.5vh;
@@ -35,6 +37,9 @@ const Button = styled.button`
   color: rgba(255, 255, 255, 0.8);
   padding: 5px 15px;
   border-radius: 15px;
+  margin: 50px auto 0px;
+  display: block;
+
   font-size: 17px;
   &:hover {
     opacity: 0.8;
@@ -55,12 +60,24 @@ const BlogTable = styled.table`
   width: fit-content;
   border: 2px solid rgba(255, 255, 255, 0.5);
   margin: 50px auto;
-  border-spacing: 20px;
   thead {
     tr {
       th {
         border-bottom: 2px solid rgba(255, 255, 255, 0.7);
       }
+    }
+  }
+  tbody {
+    tr {
+      padding: 5px 10px;
+      border: 2px solid;
+      text-align: center;
+      &:nth-child(even) {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    &:hover{
+      background: rgba(255, 255, 255, 0.2);
+      transition:background .5s ease;
     }
   }
 `;
@@ -83,13 +100,27 @@ const ActionButton = styled.button<ActionButtonType>`
 const Dashboard = () => {
   const { loggedinUser } = useBlogContext();
   const { id } = loggedinUser.user;
+  const { mutate } = useMutation({
+    mutationKey: ['remove-blog'],
+    mutationFn: deleteBlog,
+    onSuccess: () => {
+      toast.warn('Recode Deleted...');
+    },
+    onError: (error) => {
+      toast.error('Error happend');
+    },
+  });
+  const quireyClient = useQueryClient();
   const { isLoading, data, isError } = useQuery({
     queryKey: ['user', id],
     queryFn: () => fetchUserById(id, loggedinUser.access_token),
   });
 
   const [createPost, setCreatePost] = useState(false);
-
+  const handleDelete = (id?: string) => {
+    mutate(id);
+    quireyClient.invalidateQueries(['user', id]);
+  };
   if (isLoading)
     return (
       <DashboardWrapper>
@@ -101,36 +132,45 @@ const Dashboard = () => {
     <DashboardWrapper>
       <DashboardTitle>Hey {data?.username}</DashboardTitle>
       <Button onClick={() => setCreatePost(!createPost)}>
-        {!createPost ? 'Create Post' : 'Cancel'}
+        {!createPost ? 'New Post' : 'Cancel'}
       </Button>
       {data?.blogs && data?.blogs?.length > 0 ? (
-        <BlogTable>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Title</th>
-              <th>Description</th>
-              <th colSpan={2}>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data?.blogs.map((blog: TBlog, index: number) => (
-              <tr key={blog.title}>
-                <td>{index + 1}</td>
-                <td>{blog.title}</td>
-                <td>{blog.description.substring(0, 100) + '...'}</td>
-                <td>
-                  <ActionButton actionType="danger">Delete</ActionButton>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </BlogTable>
+        <>
+          {!createPost && (
+            <BlogTable>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th colSpan={2}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data?.blogs.map((blog: TBlog, index: number) => (
+                  <tr key={blog.title}>
+                    <td>{index + 1}</td>
+                    <td>{blog.title}</td>
+                    <td>{blog.description.substring(0, 100) + '...'}</td>
+                    <td>
+                      <ActionButton
+                        onClick={() => handleDelete(blog.id)}
+                        actionType="danger"
+                      >
+                        Delete
+                      </ActionButton>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </BlogTable>
+          )}
+        </>
       ) : (
         <MessageContainer>
           <Info>You dont't posted any... post Now 🥰</Info>
           <Button onClick={() => setCreatePost(!createPost)}>
-            {!createPost ? 'Create Post' : 'Cancel'}
+            {!createPost ? 'New Post' : 'Cancel'}
           </Button>
         </MessageContainer>
       )}

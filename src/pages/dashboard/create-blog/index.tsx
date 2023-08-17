@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import styled from '@emotion/styled';
+import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
 import ReactQuill from 'react-quill';
-import Dropzone from 'react-dropzone';
 import 'react-quill/dist/quill.snow.css';
-import { useMutation } from '@tanstack/react-query';
+import Dropzone from 'react-dropzone';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TUser } from '../../../types/user';
 import { BlogPostValidation } from '../../../validation';
 import { postBlog } from '../../../api/blog';
@@ -99,6 +100,7 @@ const CreateBlog = ({ user, setCreatePost }: CreateBlogProps) => {
     content: '',
     media: '',
   };
+
   const [image, setimage] = useState('');
   const [blogContent, setBlogContent] = useState('');
   const { values, touched, errors, handleChange, handleSubmit, resetForm } =
@@ -109,12 +111,14 @@ const CreateBlog = ({ user, setCreatePost }: CreateBlogProps) => {
         createData();
       },
     });
-
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationKey: ['create-blog'],
     mutationFn: postBlog,
     onSuccess: (response) => {
-      console.log(response);
+      queryClient.invalidateQueries(['user', loggedinUser.user.id]);
+      toast.success('Blog post added');
+      setCreatePost(false);
     },
     onError: (error) => {
       console.log(error);

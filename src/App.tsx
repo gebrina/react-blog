@@ -13,6 +13,7 @@ import Register from './pages/register';
 import ProtectedRoute from './protected-route';
 import Dashboard from './pages/dashboard';
 import { useBlogContext } from './context';
+import { ScrollToTop } from './utils/scrollToTop';
 
 const AppWrapper = styled.main`
   min-height: 100dvh;
@@ -26,6 +27,7 @@ const App: FC = () => {
   const { isLoggedIn } = useBlogContext();
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <AppWrapper>
         <Navbar />
         <Routes>

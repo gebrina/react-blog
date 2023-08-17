@@ -83,9 +83,11 @@ const Navbar = () => {
   const { isLoggedIn, handleLogOut } = useBlogContext();
   return (
     <NavbarWrapper>
-      <LogoContainer>
-        <img src={logo} alt="G" />
-      </LogoContainer>
+      <NavLink to={'/'}>
+        <LogoContainer>
+          <img src={logo} alt="G" />
+        </LogoContainer>
+      </NavLink>
       <NavLinkWrapper>
         <NavLink to={'/'}>Home</NavLink>
         <NavLink to={'/blog'}>Blog</NavLink>

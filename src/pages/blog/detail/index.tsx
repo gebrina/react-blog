@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
+import Purify from 'dompurify';
 import { fetchBlogById } from '../../../api/blog';
 import Loader from '../../../components/loader';
 
@@ -45,12 +46,17 @@ const BlogDetail = () => {
         <Loader />
       </BlogDetailWrapper>
     );
+
   return (
     <BlogDetailWrapper>
       <BlogTitle>{blog?.title}</BlogTitle>
       <BlogDescription>{blog?.description}</BlogDescription>
       <img src={'http://' + blog?.media} alt="" />
-      <BlogContent>{blog?.content}</BlogContent>
+      <BlogContent
+        dangerouslySetInnerHTML={{
+          __html: Purify.sanitize(blog?.content as any),
+        }}
+      />
     </BlogDetailWrapper>
   );
 };

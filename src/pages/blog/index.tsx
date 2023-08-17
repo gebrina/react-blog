@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import React, { FC } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import jsxImage from '../../assets/jsx.jpg';
 import BlogCard from './card';
 import { fetchBlogs } from '../../api/blog';
 import { CONSTANT } from '../../constants';
@@ -9,7 +8,7 @@ import { TBlog } from '../../types/blog';
 import Loader from '../../components/loader';
 
 const BlogWrapper = styled.div`
-  min-height: 84.5vh;
+  min-height: 85.5vh;
   padding-right: 75px;
   padding-left: 75px;
   display: flex;
@@ -59,8 +58,7 @@ const Blog: FC = () => {
     queryKey: ['blogs'],
     queryFn: ({ pageParam = 1 }) => fetchBlogs(pageParam),
     getNextPageParam: (lastPage, allPages) => {
-      const nextPage =
-        lastPage.length === CONSTANT.LIMIT ? allPages.length + 1 : undefined;
+      const nextPage = allPages.length + 1 || undefined;
       return nextPage;
     },
   });
