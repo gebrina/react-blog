@@ -40,12 +40,12 @@
 
 #### Hompage
 
-![HomePage](./src/assets/home.png)
+![HomePage](https://github.com/gebrina/react-blog/blob/main/src/assets/home.PNG?raw=true)
 
 #### Blog Page
 
-![blog](./src/assets/blog.png)
+![blog](https://github.com/gebrina/react-blog/blob/main/src/assets/blog.PNG?raw=true)
 
 #### Login Page
 
-![login](./src/assets/login.png)
+![login](https://github.com/gebrina/react-blog/blob/main/src/assets/login.PNG?raw=true)
