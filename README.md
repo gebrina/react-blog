@@ -29,6 +29,23 @@
 ## Technologies Used
 
 1, React (TS Based)
-2, React Emotion
 
-> Don't forget cloning the api for more info go to [blog-api](https://github.com/gebrina/blog-api.git)
+2, Styled Component (for React)
+
+3, React Query
+
+> Don't forget cloning the api; for more info go to [blog-api](https://github.com/gebrina/blog-api.git)
+
+### After running you will be able to see
+
+#### Hompage
+
+![HomePage](./src/assets/home.png)
+
+#### Blog Page
+
+![blog](./src/assets/blog.png)
+
+#### Login Page
+
+![login](./src/assets/login.png)
